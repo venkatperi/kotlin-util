@@ -16,7 +16,7 @@
 
 package com.vperi.kotlin
 
-import java.util.WeakHashMap
+import java.util.*
 import kotlin.reflect.KProperty
 
 class LazyWithReceiver<in T, out R>(private val initializer: T.() -> R) {
@@ -24,9 +24,9 @@ class LazyWithReceiver<in T, out R>(private val initializer: T.() -> R) {
 
   @Suppress("UNCHECKED_CAST")
   operator fun getValue(thisRef: Any, property: KProperty<*>): R =
-      synchronized(values)
-      {
-        thisRef as T
-        return values.getOrPut(thisRef) { thisRef.initializer() }
-      }
+    synchronized(values)
+    {
+      thisRef as T
+      return values.getOrPut(thisRef) { thisRef.initializer() }
+    }
 }

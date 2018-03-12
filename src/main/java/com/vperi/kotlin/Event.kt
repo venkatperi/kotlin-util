@@ -16,19 +16,36 @@
 
 package com.vperi.kotlin
 
-typealias  EventHandler<T> = Event<T>.(T?) -> Unit
+import com.google.common.collect.ImmutableSet
 
-class Event<T : Any?> {
-  private val handlers = arrayListOf<EventHandler<T>>()
+typealias  EventHandler<T> = (T?) -> Unit
+
+open class Event<T : Any> {
+  private val handlers = mutableSetOf<EventHandler<T>>()
+  private var hasSticky = false
+  private var sticky: T? = null
 
   operator fun plusAssign(handler: EventHandler<T>) {
-    handlers += handler
+    synchronized(handlers) {
+      handlers.add(handler)
+    }
+    if (hasSticky) {
+      handler(sticky)
+    }
   }
 
   operator fun minusAssign(handler: EventHandler<T>) {
-    handlers.remove(handler)
+    synchronized(handlers) {
+      handlers.remove(handler)
+    }
   }
 
-  operator fun invoke(value: T? = null) =
-      handlers.forEach { it(value) }
+  operator fun invoke(value: T? = null, sticky: Boolean = false) {
+    if (sticky) {
+      this.sticky = value
+      hasSticky = true
+    }
+    ImmutableSet.copyOf(handlers).forEach { it(value) }
+  }
+
 }
