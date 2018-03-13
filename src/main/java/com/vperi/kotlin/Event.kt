@@ -47,5 +47,4 @@ open class Event<T : Any> {
     }
     ImmutableSet.copyOf(handlers).forEach { it(value) }
   }
-
 }
