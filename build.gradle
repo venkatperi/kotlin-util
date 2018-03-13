@@ -56,28 +56,17 @@ dependencies {
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:${libs.kotlin}"
 }
 
-bintray {
-  user = bintray_user
-  key = bintray_apikey
-  pkg {
-    repo = 'maven'
-    name = 'gradle-project'
-    userOrg = 'bintray_user'
-    licenses = ['Apache-2.0']
-    vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
-  }
-}
-
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      repository(url: "${nexusUrl}/repository/maven-releases") {
-        authentication(userName: nexusUsername, password: nexusPassword)
-      }
-
-      snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots") {
-        authentication(userName: nexusUsername, password: nexusPassword)
-      }
-    }
-  }
-}
+//
+//uploadArchives {
+//  repositories {
+//    mavenDeployer {
+//      repository(url: "${nexusUrl}/repository/maven-releases") {
+//        authentication(userName: nexusUsername, password: nexusPassword)
+//      }
+//
+//      snapshotRepository(url: "${nexusUrl}/repository/maven-snapshots") {
+//        authentication(userName: nexusUsername, password: nexusPassword)
+//      }
+//    }
+//  }
+//}
