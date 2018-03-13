@@ -1,8 +1,8 @@
 buildscript {
   ext {
+    nexusUrl = findProperty('nexusUrl') ?: null
     libs = [
         kotlin  : '1.2.30',
-        kovenant: '3.3.0',
         dokka   : '0.9.16',
     ] << (findProperty('libs') ?: [dummy: ""])
   }
@@ -17,13 +17,23 @@ buildscript {
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.kotlin}"
     classpath group: 'com.cinnober.gradle', name: 'semver-git', version: '2.2.0'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
   }
+}
+
+ext {
+  nexusUrl = findProperty('nexusUrl') ?: null
+  libs = [
+      kotlin  : '1.2.30',
+      dokka   : '0.9.16',
+  ] << (findProperty('libs') ?: [dummy: ""])
 }
 
 apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'com.cinnober.gradle.semver-git'
+apply plugin: 'com.jfrog.bintray'
 
 group = "com.vperi"
 
@@ -44,6 +54,18 @@ dependencies {
   testCompile group: 'net.jodah', name: 'concurrentunit', version: '0.4.3'
   testCompile 'junit:junit:4.12'
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:${libs.kotlin}"
+}
+
+bintray {
+  user = bintray_user
+  key = bintray_apikey
+  pkg {
+    repo = 'maven'
+    name = 'gradle-project'
+    userOrg = 'bintray_user'
+    licenses = ['Apache-2.0']
+    vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+  }
 }
 
 uploadArchives {
